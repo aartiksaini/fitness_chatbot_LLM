@@ -51,16 +51,16 @@ def process_query(query):
 # --- Streamlit App ---
 
 
-chat_history = []  
+# chat_history = []  
 
 # --- Streamlit App ---
 st.title("Fitness and Nutrition Chatbot")
 
-for message in chat_history:
-    if "User:" in message:
-        st.markdown(f"<div class='user-message'>{message}</div>", unsafe_allow_html=True)
-    else:  # Assumes it's the chatbot
-        st.markdown(f"<div class='chatbot-message'>{message}</div>", unsafe_allow_html=True)
+# for message in chat_history:
+#     if "User:" in message:
+#         st.markdown(f"<div class='user-message'>{message}</div>", unsafe_allow_html=True)
+#     else:  # Assumes it's the chatbot
+#         st.markdown(f"<div class='chatbot-message'>{message}</div>", unsafe_allow_html=True)
 
 user_input = st.text_input("Ask me about fitness or nutrition:")
 
