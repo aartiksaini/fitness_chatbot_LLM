@@ -1,71 +1,60 @@
-import requests
-import streamlit as st
+import pandas as pd
 import cohere
 import os
-
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv() 
-
-# --- Configuration ---
-EDAMAM_NUTRITION_URL = "https://api.edamam.com/api/nutrition-data"
-
-# Load API keys from Streamlit Secrets
-edamam_app_id = os.environ["EDAMAM_APP_ID"]
-edamam_app_key = os.environ["EDAMAM_APP_KEY"]
+# Load environment variables 
+load_dotenv()  
 cohere_api_key = os.environ["COHERE_API_KEY"]
-
-# Initialize the Cohere Client
 co = cohere.Client(cohere_api_key)
 
-def get_nutrition_fact(food):
-    params = {
-        "app_id": EDAMAM_APP_ID,
-        "app_key": EDAMAM_APP_KEY,
-        "ingr": f"1 {food}"  # Added quantity 
-    }
-    response = requests.get(EDAMAM_NUTRITION_URL, params=params)
+# --- Dataset Loading (Adapt This!) ---
+def load_exercise_data(csv_file):
+    df = pd.read_csv(csv_file)
+    # ... potentially extract relevant columns & data cleaning ... 
+    return df 
 
-    if response.status_code == 200:
-        data = response.json()
-        calories = data['calories']
-        return f"{food} has approximately {calories} calories."
-    else:
-        return "Nutrition data unavailable. Try a different food or 'calories in 1 apple'"  # Improved Error Handling
+# Replace 'your_data.csv' with your actual filename
+exercise_data = load_exercise_data('megaGymDataset.csv') 
 
-
+# ---  Process User Queries ---
 def process_query(query):
-    if "nutrition" in query or "calories" in query:
-        food = query.split(" ", 1)[1]  # Simple food item extraction
-        return get_nutrition_fact(food)
-    else:  
-        # Construct fitness-focused prompt for Cohere 
-        response = co.generate( 
-            model='command-nightly',  
-            prompt=f"You are a fitness expert. Answer this user's query in a few short helpful sentences: {query}", 
-            temperature=0.8, 
-            stop_sequences=["--"])
-        return response.generations[0].text
+    # 1. Check for Specific Exercise Lookup
+    if user_asks_about_exercise(query):  #  Helper function below
+        exercise_name = extract_exercise_name(query)  # Helper function below
+        return describe_exercise(exercise_name, exercise_data)  
 
-# --- Streamlit App ---
+    # 2. General Workout or Fitness Questions using Cohere
+    prompt = craft_fitness_prompt(query, exercise_data)  # Helper function below
+    response = co.generate( 
+        model='command-nightly',  
+        prompt=prompt,   
+        stop_sequences=["--"]) 
+    return response.generations[0].text
 
+# --- Helper Functions (You might need to adjust) ---
+def user_asks_about_exercise(query):
+    # Simple keyword detection, make this smarter!
+    return "describe" in query or "how to" in query 
 
-# chat_history = []  
+def extract_exercise_name(query):
+    # Basic extraction,  improve this with NLP techniques if needed
+    return query.split("describe ")[1] 
 
-# --- Streamlit App ---
-st.title("Fitness and Nutrition Chatbot")
+def describe_exercise(exercise, data):
+    # ... lookup  exercise in 'data' & construct a description ...
+    return "Description from dataset here..." 
 
-# for message in chat_history:
-#     if "User:" in message:
-#         st.markdown(f"<div class='user-message'>{message}</div>", unsafe_allow_html=True)
-#     else:  # Assumes it's the chatbot
-#         st.markdown(f"<div class='chatbot-message'>{message}</div>", unsafe_allow_html=True)
+def craft_fitness_prompt(query, data):
+    # ... construct the 'You are a fitness expert...' type prompt  ...
+    return "User Query: " + query 
 
-user_input = st.text_input("Ask me about fitness or nutrition:")
+# --- Basic Streamlit UI (Optional) ---
+import streamlit as st
+
+st.title("Fitness Knowledge Bot")
+user_input = st.text_input("Ask me about workouts or fitness...")
 
 if st.button("Submit"): 
-    chatbot_response = process_query(user_input)
-    chat_history.append("User: " + user_input)
-    chat_history.append("Chatbot: " + chatbot_response)
-    st.write("Chatbot:", chatbot_response) 
+  chatbot_response = process_query(user_input)
+  st.write("Chatbot:", chatbot_response) 
