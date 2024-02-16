@@ -52,7 +52,7 @@ def craft_fitness_prompt(query, data):
 # --- Basic Streamlit UI (Optional) ---
 import streamlit as st
 
-st.title("Fitness Knowledge Bot")
+st.title(" Fitness ChatBot")
 user_input = st.text_input("Ask me about workouts or fitness...")
 
 if st.button("Submit"): 
