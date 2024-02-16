@@ -2,6 +2,7 @@ import pandas as pd
 import cohere
 import os
 from dotenv import load_dotenv
+import streamlit as st
 
 # Load environment variables 
 load_dotenv()  
@@ -18,11 +19,24 @@ def load_exercise_data(csv_file):
 exercise_data = load_exercise_data('megaGymDataset.csv') 
 
 # ---  Process User Queries ---
-def process_query(query):
-    # 1. Check for Specific Exercise Lookup
-    if user_asks_about_exercise(query):  #  Helper function below
-        exercise_name = extract_exercise_name(query)  # Helper function below
-        return describe_exercise(exercise_name, exercise_data)  
+def gather_user_preferences():
+    goal = st.selectbox("What's your main fitness goal?", 
+                        ["Weight Loss", "Build Muscle", "Endurance", "General Fitness"])
+    experience = st.radio("What's your experience level?",
+                          ["Beginner", "Intermediate", "Advanced"])
+    restrictions = st.checkbox("Any injuries or limitations?")
+    # ... more questions can be added
+
+    return goal, experience, restrictions
+
+def process_query(query, exercise_data, user_preferences=None):
+    if user_preferences is None:
+         # First Time - Gather preferences
+         goal, experience, restrictions = gather_user_preferences()
+         return process_query(query, exercise_data, 
+                              user_preferences={"goal": goal, 
+                                            "experience": experience, 
+                                            "restrictions": restrictions})
 
     # 2. General Workout or Fitness Questions using Cohere
     prompt = craft_fitness_prompt(query, exercise_data)  # Helper function below
@@ -49,12 +63,14 @@ def craft_fitness_prompt(query, data):
     # ... construct the 'You are a fitness expert...' type prompt  ...
     return "User Query: " + query 
 
-# --- Basic Streamlit UI (Optional) ---
-import streamlit as st
+# --- Streamlit UI ---
+st.title("Fitness Knowledge Bot")
 
-st.title(" Fitness ChatBot")
+# Gather preferences right at the start 
+user_preferences = gather_user_preferences() 
+
 user_input = st.text_input("Ask me about workouts or fitness...")
 
 if st.button("Submit"): 
-  chatbot_response = process_query(user_input)
+  chatbot_response = process_query(user_input, exercise_data, user_preferences)
   st.write("Chatbot:", chatbot_response) 
