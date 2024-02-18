@@ -22,8 +22,7 @@ The Fitness Chatbot leverages a  comprehensive exercise database and the power o
 
 ## Project Demo Video Link :
 
-[[https://github.com/shubh-vedi/Backorder_prediction_Project/issues/1#issue-1841347829]
-](https://user-images.githubusercontent.com/11310900/259118502-2f7763ae-4525-4329-a835-e8dd4c0f7893.mp4)
+([https://user-images.githubusercontent.com/11310900/259118502-2f7763ae-4525-4329-a835-e8dd4c0f7893.mp4](https://github.com/shubh-vedi/fitness_chatbot_LLM/issues/1#issue-2140898713))
 
 
 # AWS Deployment Link :
