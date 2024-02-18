@@ -22,15 +22,16 @@ The Fitness Chatbot leverages a  comprehensive exercise database and the power o
 
 ## Project Demo Video Link :
 
-[https://github.com/shubh-vedi/fitness_chatbot_LLM/issues/1#issue-2140898713](https://github.com/shubh-vedi/fitness_chatbot_LLM/issues/1#issue-2140898713)
-
+[https://github.com/shubh-vedi/fitness_chatbot_LLM/issues/1#issue-2140898713]
+(https://github.com/shubh-vedi/fitness_chatbot_LLM/issues/1#issue-2140898713)
 
 # AWS Deployment Link :
 
 AWS LightSail link : 
+
 # Screenshot of UI
 
-![HomepageUI](Screenshots/photo_2023-08-07_18-15-54.jpg)
+![HomepageUI](Screenshot.JPG)
 
 ## How to Run Locally
 
