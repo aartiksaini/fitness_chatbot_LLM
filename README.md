@@ -20,6 +20,19 @@ The Fitness Chatbot leverages a  comprehensive exercise database and the power o
 * **Pandas:** Data manipulation and analysis (for managing the exercise database).
 * **AWS Lightsail:** Deployment platform.
 
+## Project Demo Video Link :
+
+[[[https://github.com/shubh-vedi/Backorder_prediction_Project/issues/1#issue-1841347829](https://github.com/shubh-vedi/fitness_chatbot_LLM/issues/1#issue-2140898713)
+](https://user-images.githubusercontent.com/11310900/259118502-2f7763ae-4525-4329-a835-e8dd4c0f7893.mp4)
+]
+
+# AWS Deployment Link :
+
+AWS LightSail link : 
+# Screenshot of UI
+
+![HomepageUI](Screenshots/photo_2023-08-07_18-15-54.jpg)
+
 ## How to Run Locally
 
 1. **Clone the Repository:**
