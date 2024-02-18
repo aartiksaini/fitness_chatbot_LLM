@@ -28,6 +28,10 @@ The Fitness Chatbot leverages a  comprehensive exercise database and the power o
 
 AWS LightSail link : (http://34.200.246.244:8503/)
 
+# Streamlit Deployment Link :
+
+Streamlit link : ([http://34.200.246.244:8503](https://fitnesschatbotllm-qzkaqgpjwra5276zqhwa9g.streamlit.app/)/)
+
 # Screenshot of UI
 
 ![HomepageUI](Screenshot.JPG)
