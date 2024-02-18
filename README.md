@@ -26,7 +26,7 @@ The Fitness Chatbot leverages a  comprehensive exercise database and the power o
 
 # AWS Deployment Link :
 
-AWS LightSail link : 
+AWS LightSail link : (http://34.200.246.244:8503/)
 
 # Screenshot of UI
 
