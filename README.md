@@ -24,9 +24,7 @@ The Fitness Chatbot leverages a  comprehensive exercise database and the power o
 
 [https://github.com/shubh-vedi/fitness_chatbot_LLM/issues/1#issue-2140898713](https://github-production-user-asset-6210df.s3.amazonaws.com/11310900/305705535-2dab8aa0-0c42-4d0d-afcd-cfbc3652f0f5.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240218%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240218T102523Z&X-Amz-Expires=300&X-Amz-Signature=9a368b49dc47600d843a5047498de66dfbe705f6073bf37bb1a3a547fadddc0c&X-Amz-SignedHeaders=host&actor_id=11310900&key_id=0&repo_id=758161782)
 
-# AWS Deployment Link :
 
-AWS LightSail link : (http://34.200.246.244:8503/)
 
 # Streamlit Deployment Link :
 
