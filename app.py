@@ -4,73 +4,79 @@ import os
 from dotenv import load_dotenv
 import streamlit as st
 
-# Load environment variables 
-load_dotenv()  
-cohere_api_key = os.environ["COHERE_API_KEY"]
+# --- Load Environment Variables ---
+load_dotenv()
+cohere_api_key = os.getenv("COHERE_API_KEY")
+
+if cohere_api_key is None:
+    st.error("COHERE_API_KEY not found. Please check your .env file.")
+    st.stop()
+
 co = cohere.Client(cohere_api_key)
 
-# --- Dataset Loading (Adapt This!) ---
+# --- Load Dataset ---
 def load_exercise_data(csv_file):
     df = pd.read_csv(csv_file)
-    # ... potentially extract relevant columns & data cleaning ... 
-    return df 
+    return df
 
-# Replace 'your_data.csv' with your actual filename
-exercise_data = load_exercise_data('megaGymDataset.csv') 
+exercise_data = load_exercise_data('megaGymDataset.csv')
 
-# ---  Process User Queries ---
+# --- Gather User Preferences ---
 def gather_user_preferences():
-    goal = st.selectbox("What's your main fitness goal?", 
+    goal = st.selectbox("What's your main fitness goal?",
                         ["Weight Loss", "Build Muscle", "Endurance", "General Fitness"])
     experience = st.radio("What's your experience level?",
                           ["Beginner", "Intermediate", "Advanced"])
     restrictions = st.checkbox("Any injuries or limitations?")
-    # ... more questions can be added
+    
+    return {
+        "goal": goal,
+        "experience": experience,
+        "restrictions": restrictions
+    }
 
-    return goal, experience, restrictions
-
+# --- Process User Query ---
 def process_query(query, exercise_data, user_preferences=None):
     if user_preferences is None:
-         # First Time - Gather preferences
-         goal, experience, restrictions = gather_user_preferences()
-         return process_query(query, exercise_data, 
-                              user_preferences={"goal": goal, 
-                                            "experience": experience, 
-                                            "restrictions": restrictions})
+        user_preferences = gather_user_preferences()
 
-    # 2. General Workout or Fitness Questions using Cohere
-    prompt = craft_fitness_prompt(query, exercise_data)  # Helper function below
-    response = co.generate( 
-        model='command-nightly',  
-        prompt=prompt,   
-        stop_sequences=["--"]) 
-    return response.generations[0].text
+    # Craft prompt using helper
+    prompt = craft_fitness_prompt(query, exercise_data, user_preferences)
 
-# --- Helper Functions (You might need to adjust) ---
-def user_asks_about_exercise(query):
-    # Simple keyword detection, make this smarter!
-    return "describe" in query or "how to" in query 
+    # Use chat API (updated from generate)
+    response = co.chat(
+        model='command-nightly',
+        message=prompt
+    )
+    return response.text
 
-def extract_exercise_name(query):
-    # Basic extraction,  improve this with NLP techniques if needed
-    return query.split("describe ")[1] 
+# --- Helper Function to Craft Prompt ---
+def craft_fitness_prompt(query, data, prefs):
+    goal = prefs["goal"]
+    experience = prefs["experience"]
+    restrictions = "Yes" if prefs["restrictions"] else "No"
 
-def describe_exercise(exercise, data):
-    # ... lookup  exercise in 'data' & construct a description ...
-    return "Description from dataset here..." 
-
-def craft_fitness_prompt(query, data):
-    # ... construct the 'You are a fitness expert...' type prompt  ...
-    return "User Query: " + query 
+    prompt = (
+        f"You are a certified personal trainer helping a client with the following goals:\n"
+        f"- Goal: {goal}\n"
+        f"- Experience Level: {experience}\n"
+        f"- Injuries/Limitations: {restrictions}\n\n"
+        f"The client asked: \"{query}\"\n"
+        f"Please provide a helpful and specific answer."
+    )
+    return prompt
 
 # --- Streamlit UI ---
-st.title("Fitness Knowledge Bot")
+st.title("🏋️ Fitness Knowledge Bot")
 
-# Gather preferences right at the start 
-user_preferences = gather_user_preferences() 
+# Collect user preferences
+user_preferences = gather_user_preferences()
 
+# Text input for user query
 user_input = st.text_input("Ask me about workouts or fitness...")
 
-if st.button("Submit"): 
-  chatbot_response = process_query(user_input, exercise_data, user_preferences)
-  st.write("Chatbot:", chatbot_response) 
+# Submit button
+if st.button("Submit") and user_input:
+    chatbot_response = process_query(user_input, exercise_data, user_preferences)
+    st.markdown("**Chatbot:**")
+    st.write(chatbot_response)
